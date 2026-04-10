@@ -8,13 +8,21 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-
-    handleScroll(); // initial check
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const menuItems = ["Home", "About", "Projects", "Contact"];
+
+  const handleNavClick = (item: string) => {
+    setMenuOpen(false);
+    // Tunggu menu tutup dulu, baru scroll
+    setTimeout(() => {
+      const el = document.getElementById(item.toLowerCase());
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+  };
 
   return (
     <motion.nav
@@ -28,10 +36,7 @@ export default function Navbar() {
       }`}
     >
       <div className="flex justify-between items-center px-6 md:px-20 py-5 w-full">
-        <a
-          href="#home"
-          className="font-bold text-white text-lg md:text-xl tracking-tight"
-        >
+        <a href="#home" className="font-bold text-white text-lg md:text-xl tracking-tight">
           Khairil Amanta Hasibuan
         </a>
 
@@ -80,14 +85,13 @@ export default function Navbar() {
           >
             <div className="flex flex-col px-6 py-4 gap-4">
               {menuItems.map((item) => (
-                <a
+                <button
                   key={item}
-                  href={`#${item.toLowerCase()}`}
-                  onClick={() => setMenuOpen(false)}
-                  className="text-gray-300 hover:text-white transition text-base py-1"
+                  onClick={() => handleNavClick(item)}
+                  className="text-gray-300 hover:text-white transition text-base py-1 text-left"
                 >
                   {item}
-                </a>
+                </button>
               ))}
             </div>
           </motion.div>
