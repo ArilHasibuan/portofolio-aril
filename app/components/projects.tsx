@@ -25,9 +25,13 @@ export default function Projects() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="projects" className="min-h-screen flex flex-col justify-center py-24" ref={ref}>
+    <section
+      id="projects"
+      className="min-h-screen flex flex-col items-center justify-center py-24 px-4 text-center"
+      ref={ref}
+    >
       <motion.p
-        className="text-blue-400 font-semibold mb-2"
+        className="text-blue-400 font-semibold mb-2 tracking-widest text-sm uppercase"
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5 }}
@@ -36,7 +40,7 @@ export default function Projects() {
       </motion.p>
 
       <motion.h2
-        className="text-4xl font-bold text-white mb-10"
+        className="text-4xl md:text-5xl font-bold text-white mb-10"
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -44,14 +48,14 @@ export default function Projects() {
         Projects
       </motion.h2>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
         {projects.map((p, i) => (
           <motion.div
             key={p.title}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-blue-500/40 transition-all duration-200 cursor-pointer"
+            className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-blue-500/40 transition-all duration-200 cursor-pointer text-left"
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0, delay: 0 + i * 0.15 }}
+            transition={{ duration: 0.5, delay: 0.2 + i * 0.15 }}
             whileHover={{ y: -5 }}
           >
             <h3 className="font-bold text-white text-lg mb-2">{p.title}</h3>

@@ -1,16 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    setScrolled(window.scrollY > 50);
     const handleScroll = () => setScrolled(window.scrollY > 50);
+
+    handleScroll(); // initial check
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const menuItems = ["Home", "About", "Projects", "Contact"];
 
   return (
     <motion.nav
@@ -23,40 +27,17 @@ export default function Navbar() {
           : "bg-blue-900/80"
       }`}
     >
-      {/*
-        ┌─────────────────────────────────────────────────┐
-        │  PADDING NAVBAR (tinggi navbar)                 │
-        │  Ganti py-6 → lebih tinggi, py-4 → lebih kecil │
-        └─────────────────────────────────────────────────┘
-        px-8 md:px-20 → jarak kiri/kanan
-      */}
-      <div className="flex justify-between items-center px-8 md:px-20 py-6 w-full">
-
-        {/*
-          ┌────────────────────────────────────────┐
-          │  UKURAN NAMA / LOGO (kiri)             │
-          │  text-lg  = 18px                       │
-          │  text-xl  = 20px  ← sekarang           │
-          │  text-2xl = 24px                       │
-          └────────────────────────────────────────┘
-        */}
-        <a href="#home" className="font-bold text-white text-xl tracking-tight">
+      <div className="flex justify-between items-center px-6 md:px-20 py-5 w-full">
+        <a
+          href="#home"
+          className="font-bold text-white text-lg md:text-xl tracking-tight"
+        >
           Khairil Amanta Hasibuan
         </a>
 
-        {/*
-          ┌────────────────────────────────────────┐
-          │  UKURAN LINK MENU (kanan)              │
-          │  text-sm  = 14px                       │
-          │  text-base= 16px  ← sekarang           │
-          │  text-lg  = 18px                       │
-          │                                        │
-          │  gap-8 → jarak antar menu item         │
-          │  gap-10 → lebih renggang               │
-          └────────────────────────────────────────┘
-        */}
-        <div className="flex gap-10 text-base text-gray-300">
-          {["Home", "About", "Projects", "Contact"].map((item) => (
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-10 text-base text-gray-300">
+          {menuItems.map((item) => (
             <motion.a
               key={item}
               href={`#${item.toLowerCase()}`}
@@ -68,7 +49,50 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* Hamburger Button */}
+        <button
+          className="md:hidden flex flex-col gap-1.5 p-2"
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
+          <motion.span
+            animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+            className="block w-6 h-0.5 bg-white origin-center"
+          />
+          <motion.span
+            animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+            className="block w-6 h-0.5 bg-white"
+          />
+          <motion.span
+            animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+            className="block w-6 h-0.5 bg-white origin-center"
+          />
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-black/60 backdrop-blur-md border-t border-white/10 overflow-hidden"
+          >
+            <div className="flex flex-col px-6 py-4 gap-4">
+              {menuItems.map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="text-gray-300 hover:text-white transition text-base py-1"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
